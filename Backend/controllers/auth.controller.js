@@ -1,4 +1,6 @@
-import { User } from "../models/user.model.js";
+import { User } from "../models/user.model.js"
+import bcryptjs from "bcryptjs";
+import { generateTokenAndSetCookie } from "../utils/generateToken.js"
 
 export async function signup(req,res) {
     try{
@@ -8,7 +10,7 @@ export async function signup(req,res) {
             return res.status(400).json({success:false,message:"All fields are reuired!!!"})
         }
 
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,})$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.([a-zA-Z]{2,})$/
         if(!emailRegex.test(email)){
             return res.status(400).json({success:false,message:"Invalid email address!!!"})
         }
@@ -27,21 +29,30 @@ export async function signup(req,res) {
             return res.status(400).json({success:false,message:"Username already exists!!!"})
         }
 
+        const salt = await bcryptjs.genSalt(10)
+        const hashedPassword = await bcryptjs.hash(password, salt)
+
+
         const PROFILE_PICS = ["/1.jpg","/2.jpg","/3.jpg"]
 
         const image = PROFILE_PICS[Math.floor(Math.random() * PROFILE_PICS.length)]
 
         const newUser = new User({
             email,
-            password,
+            password: hashedPassword,
             username,
             image
         })
 
         
-
+        generateTokenAndSetCookie(newUser._id, res)
+        
         await newUser.save()
+        
         res.status(201).json({success:true,message:"User created successfully!!!"})
+        
+
+        
 
 
     }catch(e){
@@ -53,9 +64,36 @@ export async function signup(req,res) {
 }
 
 export async function login(req,res) {
-    res.send("login route")
+    try{
+        const {email,password} = req.body
+        const existingUserByEmail = await User.findOne({ email: email });
+        if(!existingUserByEmail){   
+            return res.status(400).json({success:false,message:"Email does not exist!!!"})
+        }
+        const isValidPassword = await bcryptjs.compare(password, existingUserByEmail.password)
+        if(!isValidPassword){
+            return res.status(400).json({success:false,message:"Invalid password!!!"})
+        }
+        generateTokenAndSetCookie(User._id,res)
+
+        res.status(200).json({success:true,message:"Login successful!!!"})
+    }catch(e){
+        console.log("Error in Login controller:"+e.message)
+        res.status(500).json({success:false,message:"Internal server error!!!"})
+    }
+
+
 }
 
 export async function logout(req,res) {
-    res.send("lohout route")
+    
+    try{
+        res.clearCookie("jwt-netfix")
+        res.status(200).json({success:true,message:"Logged out successfully!!!"})
+    }catch(e){
+        console.log("Error in Logout controller:"+e.message)
+        res.status(500).json({success:false,message:"Internal server error!!!"})
+    }
+
+
 }
