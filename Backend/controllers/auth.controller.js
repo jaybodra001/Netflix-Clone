@@ -74,7 +74,7 @@ export async function login(req,res) {
         if(!isValidPassword){
             return res.status(400).json({success:false,message:"Invalid password!!!"})
         }
-        generateTokenAndSetCookie(User._id,res)
+        generateTokenAndSetCookie(existingUserByEmail._id,res)
 
         res.status(200).json({success:true,message:"Login successful!!!"})
     }catch(e){
@@ -88,7 +88,7 @@ export async function login(req,res) {
 export async function logout(req,res) {
     
     try{
-        res.clearCookie("jwt-netfix")
+        res.clearCookie("jwt-netflix")
         res.status(200).json({success:true,message:"Logged out successfully!!!"})
     }catch(e){
         console.log("Error in Logout controller:"+e.message)
