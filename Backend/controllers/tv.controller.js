@@ -2,7 +2,7 @@ import { fetchFromTMDB } from "../services/tmdb.service.js";
 
 export async function getTrendingTV(req, res) {
     try {
-        const data = await fetchFromTMDB("https://api.themoviedb.org/3/trending/tv/day?language=en-US");
+        const data = await fetchFromTMDB("https://api.themoviedb.org/3/trending/tv/day?language=en-US")
         if (!data.results || data.results.length === 0) {
             return res.status(404).json({ success: false, message: "No trending movies found" });
         }
@@ -17,7 +17,7 @@ export async function getTrendingTV(req, res) {
 export async function getTVtrailers(req, res) {
     const { id } = req.params;
     try {
-        const data = await fetchFromTMDB(`https://api.themoviedb.org/3/tv/${id}/videos?language=en-US`);
+        const data = await fetchFromTMDB(`https://api.themoviedb.org/3/tv/${id}/videos?language=en-US`)
         res.json({ success: true, trailers: data.results });
     } catch (e) {
         console.error(e);
@@ -60,7 +60,7 @@ export async function getTVByCategory(req, res) {
     const {category } = req.params;
     try{
         const data = await fetchFromTMDB(`https://api.themoviedb.org/3/tv/${category}?language=en-US&page=1`)
-        res.status(200).json({success:true,content:data})
+        res.status(200).json({success:true,content:data.results })
 
     }catch(e){
         if(e.message.includes("404")){
