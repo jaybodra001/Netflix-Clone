@@ -10,8 +10,9 @@ const Navbar = () => {
 
 	const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
-	const { setContentType } = useContentStore();
+	const { contentType,setContentType } = useContentStore();
 
+		//console.log("contentType",contentType)
 	return (
 		<header className='max-w-6xl mx-auto flex flex-wrap items-center justify-between p-4 h-20'>
 			<div className='flex items-center gap-10 z-50'>
