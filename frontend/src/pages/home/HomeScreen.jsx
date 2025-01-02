@@ -1,15 +1,14 @@
- import React from 'react'
-import { useAuthStore } from '../../store/authUser'
- 
- const HomeScreen = () => {
-    const { logout } = useAuthStore()
+import React from 'react';  
+import Navbar from '../../components/Navbar';
 
-   return (
-    <>  
-     <div>HomeScreen</div>
-     <button onClick={logout}>logout</button>
-     </>
-   )
- }
- 
- export default HomeScreen       
+const HomeScreen = () => {
+
+    return (
+        <>
+                {/* <button onClick={handleLogout}>Logout</button> */}
+            <Navbar />
+        </>
+    );
+};
+
+export default HomeScreen;
