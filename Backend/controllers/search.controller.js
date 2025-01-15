@@ -54,7 +54,6 @@ export async function searchMovie(req, res) {
         res.status(200).json({success:false, content:response.results})
 
     }catch(e){
-        console.log(e)
         res.status(500).json({success:false, message: "Internal Server Error" })
     }
 }
@@ -83,7 +82,6 @@ export async function searchTV(req, res) {
         res.status(200).json({success:false, content:response.results})
 
     }catch(e){
-        console.log(e)
         res.status(500).json({success:false, message: "Internal Server Error" })
     }
 }
@@ -101,7 +99,6 @@ export async function removeItemSearchHistory(req, res) {
 
     id = parseInt(id)
 
-    console.log(typeof id)
 
      try{
         await User.findByIdAndUpdate(req.user._id,{
@@ -113,7 +110,6 @@ export async function removeItemSearchHistory(req, res) {
         res.status(200).json({success:true, message: "Items removed from search history" })
 
      }catch(e){
-        console.log(e)
         res.status(500).json({success:false, message: "Internal Server Error" })
      }
 }

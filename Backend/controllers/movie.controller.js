@@ -9,7 +9,6 @@ export async function getTrendingMovie(req, res) {
         const randomMovie = data.results[Math.floor(Math.random() * data.results.length)];
         res.json({ success: true, content: randomMovie });
     } catch (e) {
-        console.error(e);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
@@ -20,7 +19,6 @@ export async function getMovietrailers(req, res) {
         const data = await fetchFromTMDB(`https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`);
         res.json({ success: true, trailers: data.results });
     } catch (e) {
-        console.error(e);
         if (e.message.includes("404")) {
             return res.status(404).send(null);
         }
