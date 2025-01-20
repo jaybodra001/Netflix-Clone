@@ -1,22 +1,17 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authUser";
 
 const LoginPage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+
 	const { login, isLoggingIn } = useAuthStore();
-	// const navigate = useNavigate();
 
-
-	const handleLogin = async (e) => {
+	const handleLogin = (e) => {
 		e.preventDefault();
-		const success = await login({ email, password })
-		// console.log("Login success:", success);
-        // if (success) {
-        //     navigate("/"); 
-        // }
-	};	
+		login({ email, password });
+	};
 
 	return (
 		<div className='h-screen w-full hero-bg'>

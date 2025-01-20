@@ -49,9 +49,13 @@ export async function signup(req,res) {
         
         await newUser.save()
         
-        res.status(201).json({success:true,message:"User created successfully!!!"})
-        
-
+        res.status(201).json({
+			success: true,
+			user: {
+				...newUser._doc,
+				password: "",
+			},
+		});
         
 
 
@@ -63,22 +67,37 @@ export async function signup(req,res) {
 }
 
 export async function login(req,res) {
-    try{
-        const {email,password} = req.body
-        const existingUserByEmail = await User.findOne({ email: email });
-        if(!existingUserByEmail){   
-            return res.status(400).json({success:false,message:"Email does not exist!!!"})
-        }
-        const isValidPassword = await bcryptjs.compare(password, existingUserByEmail.password)
-        if(!isValidPassword){
-            return res.status(400).json({success:false,message:"Invalid password!!!"})
-        }
-        generateTokenAndSetCookie(existingUserByEmail._id,res)
+    try {
+		const { email, password } = req.body;
 
-        res.status(200).json({success:true,message:"Login successful!!!"})
-    }catch(e){
-        res.status(500).json({success:false,message:"Internal server error!!!"})
-    }
+		if (!email || !password) {
+			return res.status(400).json({ success: false, message: "All fields are required" });
+		}
+
+		const user = await User.findOne({ email: email });
+		if (!user) {
+			return res.status(404).json({ success: false, message: "Invalid credentials" });
+		}
+
+		const isPasswordCorrect = await bcryptjs.compare(password, user.password);
+
+		if (!isPasswordCorrect) {
+			return res.status(400).json({ success: false, message: "Invalid credentials" });
+		}
+
+		generateTokenAndSetCookie(user._id, res);
+
+		res.status(200).json({
+			success: true,
+			user: {
+				...user._doc,
+				password: "",
+			},
+		});
+	} catch (error) {
+		console.log("Error in login controller", error.message);
+		res.status(500).json({ success: false, message: "Internal server error" });
+	}
 
 
 }
