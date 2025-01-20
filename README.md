@@ -1,5 +1,7 @@
 Netflix Clone with MERN Stack
 
+Live: https://netflix-clone-wrqj.onrender.com 
+
 Project Overview:
 
     This project involves building a Netflix clone using the MERN (MongoDB, Express, React, Node.js) stack. It is designed to provide a comprehensive understanding of full-stack development by implementing a video streaming platform. The application includes features such as user authentication, video browsing, and responsive design.
